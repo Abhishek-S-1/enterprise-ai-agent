@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Databricks Customer Success AI</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+</head>
+<body>
+    <div class="container">
+        <div class="sidebar">
+            <div class="logo">
+                <i class="fas fa-layer-group"></i> Databricks AI
+            </div>
+            <div class="description">
+                <p><strong>Customer Success Agent</strong></p>
+                <p>Ask about:</p>
+                <ul>
+                    <li><i class="fas fa-chart-line"></i> Customer Consumption</li>
+                    <li><i class="fas fa-dollar-sign"></i> Revenue & Cost</li>
+                    <li><i class="fas fa-book"></i> Unity Catalog & DLT</li>
+                </ul>
+            </div>
+            <div class="footer">
+                <small>Powered by Llama 3 & DSPy</small>
+            </div>
+        </div>
+
+        <div class="chat-section">
+            <div class="chat-header">
+                <h3><i class="fas fa-robot"></i> FDE Assistant</h3>
+                <span class="status">● Online</span>
+            </div>
+            
+            <div id="messageFormeight" class="card-body msg_card_body">
+                <div class="d-flex justify-content-start mb-4">
+                    <div class="img_cont_msg">
+                        <img src="https://cdn-icons-png.flaticon.com/512/4712/4712027.png" class="user_img_msg">
+                    </div>
+                    <div class="msg_cotainer">
+                        Hello! I am your Databricks FDE Assistant. <br>
+                        I can query the database for <b>usage metrics</b> or search documentation for <b>technical answers</b>.
+                    </div>
+                </div>
+            </div>
+
+            <div class="card-footer">
+                <form id="messageArea" class="input-group">
+                    <input type="text" id="text" name="msg" placeholder="Ask a question (e.g., 'Who spent the most on Compute?')" class="form-control type_msg" required/>
+                    <div class="input-group-append">
+                        <button type="submit" id="send" class="input-group-text send_btn"><i class="fas fa-location-arrow"></i></button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        $(document).ready(function() {
+            $("#messageArea").on("submit", function(event) {
+                const date = new Date();
+                const hour = date.getHours();
+                const minute = date.getMinutes();
+                const str_time = hour+":"+minute;
+                var rawText = $("#text").val();
+
+                var userHtml = '<div class="d-flex justify-content-end mb-4"><div class="msg_cotainer_send">' + rawText + '<span class="msg_time_send">'+ str_time +'</span></div><div class="img_cont_msg"><img src="https://cdn-icons-png.flaticon.com/512/1077/1077114.png" class="user_img_msg"></div></div>';
+                
+                $("#text").val("");
+                $("#messageFormeight").append(userHtml);
+                scrollToBottom();
+
+                // Show loading animation (optional simple version)
+                var loadingHtml = '<div class="d-flex justify-content-start mb-4" id="loading"><div class="msg_cotainer">Thinking...</div></div>';
+                $("#messageFormeight").append(loadingHtml);
+                scrollToBottom();
+
+                $.ajax({
+                    data: { msg: rawText },
+                    type: "POST",
+                    url: "/get",
+                }).done(function(data) {
+                    $("#loading").remove(); // Remove loading text
+                    var botHtml = '<div class="d-flex justify-content-start mb-4"><div class="img_cont_msg"><img src="https://cdn-icons-png.flaticon.com/512/4712/4712027.png" class="user_img_msg"></div><div class="msg_cotainer">' + data.response + '<span class="msg_time">' + str_time + '</span></div></div>';
+                    $("#messageFormeight").append(botHtml);
+                    scrollToBottom();
+                });
+                event.preventDefault();
+            });
+
+            function scrollToBottom() {
+                var messageBody = document.getElementById("messageFormeight");
+                messageBody.scrollTop = messageBody.scrollHeight;
+            }
+        });
+    </script>
+</body>
+</html>
