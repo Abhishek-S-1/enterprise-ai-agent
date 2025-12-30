@@ -1,0 +1,22 @@
+
+    DATABRICKS PLATFORM DOCUMENTATION (2025)
+    
+    1. UNITY CATALOG (Governance):
+       - Unity Catalog provides centralized access control, auditing, lineage, and data discovery across Databricks workspaces.
+       - Key Feature: 'Lakehouse Federation' allows querying external databases (PostgreSQL, Snowflake) without moving data.
+       - Best Practice: Use 'Managed Identities' for secure access to storage buckets (S3/ADLS).
+       
+    2. DELTA LIVE TABLES (ETL):
+       - DLT is a declarative framework for building reliable data pipelines.
+       - It automatically handles infrastructure scaling and data quality checks (expectations).
+       - 'Enforcement' rule: DROP ROW creates a quarantine for bad data rather than failing the pipeline.
+       
+    3. MODEL SERVING (Mosaic AI):
+       - Databricks Model Serving allows you to deploy LLMs and Scikit-learn models as REST APIs.
+       - Supports 'Provisioned Throughput' for guaranteed latency on Llama 3 models.
+       - Zero-copy model deployment using MLflow Registry.
+       
+    4. COST OPTIMIZATION:
+       - Use 'Jobs Compute' for automated workflows (cheaper than All-Purpose).
+       - Enable 'Serverless SQL' to avoid paying for idle cluster time.
+    
