@@ -17,10 +17,10 @@ from sql_engine import execute_sql_query
 load_dotenv()
 
 def init_agent():
-    print("🚀 Initializing Databricks Customer Success Agent...")
+    print("Initializing Databricks Customer Success Agent...")
     
     # --- 1. Load Technical Documentation ---
-    print("   📚 Indexing Databricks Documentation...")
+    print("Indexing Databricks Documentation...")
     # Use utf-8 to avoid encoding errors on Windows
     loader = TextLoader("tech_docs.txt", encoding="utf-8")
     documents = loader.load()
@@ -34,7 +34,7 @@ def init_agent():
     retriever = vectorstore.as_retriever()
     
     def technical_support(query: str):
-        print(f"   🔎 [Doc Search] Looking up feature details: '{query}'...")
+        print(f" [Doc Search] Looking up feature details: '{query}'...")
         docs = retriever.invoke(query)
         return "\n".join([d.page_content for d in docs])
 
@@ -78,13 +78,13 @@ def init_agent():
 if __name__ == "__main__":
     # Check if data exists
     if not os.path.exists("databricks_usage.db"):
-        print("⚠️  Data not found. Running setup first...")
+        print("  Data not found. Running setup first...")
         import data_setup
         data_setup.setup_data()
         
     agent_executor = init_agent()
     
-    print("\n✅ Agent Ready. (Context: Databricks Usage & Features)")
+    print("\n Agent Ready. (Context: Databricks Usage & Features)")
     print("------------------------------------------------------")
     
     # --- DEMO QUESTION 1: SQL (DSPy) ---
